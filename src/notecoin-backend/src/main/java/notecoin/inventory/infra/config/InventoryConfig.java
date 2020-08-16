@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.service.AbstractInventoryBrowser;
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater;
+import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
@@ -34,5 +36,12 @@ public class InventoryConfig {
 	public AbstractInventoryUpdater updater(JpaRepository<InventoryQuantity, Integer> quantityDao) {
 		return new InventoryUpdater((InventoryQuantityRepository) quantityDao);
 	}
+	
+
+	@Bean
+	public AbstractInventoryBrowser browser(JpaRepository<InventoryQuantity, Integer> quantityDao) {
+		return new InventoryBrowser((InventoryQuantityRepository) quantityDao);
+	}
+	
 	
 }

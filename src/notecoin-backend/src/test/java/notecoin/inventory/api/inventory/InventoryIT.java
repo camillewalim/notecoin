@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
@@ -36,6 +37,7 @@ class InventoryIT {
 
 	@SpyBean	InventoryCreator creator;
 	@SpyBean	InventoryUpdater updater;
+	@SpyBean	InventoryBrowser browser;
 	
 	@MockBean	JpaRepository<InventoryName, String> nameDao;
 	@MockBean	JpaRepository<InventoryCategory, String> catDao;
@@ -62,6 +64,16 @@ class InventoryIT {
 		web	.perform(MockMvcRequestBuilders.post("/inventory/update?name=banana&quantity=200"))
 		      .andExpect(status().isBadRequest());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
+	}
+
+	@Test
+	void browse_all_200() throws Exception {
+		web	.perform(MockMvcRequestBuilders.post("/inventory/browse"))
+		      .andExpect(status().isOk());
+		// Service activation
+			verify(browser,times(1)).getAll();
+		// Service query CRUD one time
+			verify(quantityDao,times(1)).findAll();
 	}
 	
 }
