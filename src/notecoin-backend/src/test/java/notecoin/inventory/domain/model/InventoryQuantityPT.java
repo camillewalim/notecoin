@@ -27,7 +27,6 @@ class InventoryQuantityPT {
 	
 	@Test
 	void shouldBePositive() {
-		assertThrows(IllegalStateException.class, ()-> new InventoryQuantity(0, new InventoryName("some",null)));
 		assertThrows(IllegalStateException.class, ()-> new InventoryQuantity(-1, new InventoryName("some",null)));
 	}
 	

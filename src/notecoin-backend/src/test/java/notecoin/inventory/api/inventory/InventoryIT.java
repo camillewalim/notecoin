@@ -18,9 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryName;
-import notecoin.inventory.domain.model.InventoryQuantity;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
+import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
  * @author camille.walim
@@ -39,7 +39,9 @@ class InventoryIT {
 	
 	@MockBean	JpaRepository<InventoryName, String> nameDao;
 	@MockBean	JpaRepository<InventoryCategory, String> catDao;
-	@MockBean	JpaRepository<InventoryQuantity, Integer> quantityDao;
+	@MockBean	InventoryQuantityRepository quantityDao;
+	
+	
 
 	@Test
 	void create_200() throws Exception {
@@ -56,15 +58,10 @@ class InventoryIT {
 	}
 	
 	@Test
-	void update_200() throws Exception {
+	void update_without_create_4xx() throws Exception {
 		web	.perform(MockMvcRequestBuilders.post("/inventory/update?name=banana&quantity=200"))
-		      .andExpect(status().isOk());
-		// Service activation
-			verify(updater,times(1)).update(any(),any());
-		// Service check existing taxonomy
-			verify(nameDao,times(1)).findById(any());
-		// Service update the quantity
-			verify(quantityDao,times(1)).findById(any());
+		      .andExpect(status().isBadRequest());
+		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
 	
 }

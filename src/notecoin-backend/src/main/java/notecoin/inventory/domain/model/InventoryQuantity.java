@@ -35,7 +35,7 @@ public class InventoryQuantity {
 	
 
 	public void setQuantity(int quantity) {
-		if(quantity < 1) throw new IllegalStateException("a quantity should be positive");
+		if(quantity < 0) throw new IllegalStateException("a quantity should be positive");
 		this.quantity = quantity;
 	}
 

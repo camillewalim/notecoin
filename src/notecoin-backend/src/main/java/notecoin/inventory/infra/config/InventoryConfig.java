@@ -11,6 +11,7 @@ import notecoin.inventory.domain.service.AbstractInventoryCreator;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
+import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
  * @author camille.walim
@@ -23,16 +24,15 @@ public class InventoryConfig {
 	@Bean
 	public AbstractInventoryCreator creator(
 		JpaRepository<InventoryName, String> memory,
-		JpaRepository<InventoryCategory, String> categoryDao) {
-		return new InventoryCreator(memory, categoryDao);
+		JpaRepository<InventoryCategory, String> categoryDao,
+		JpaRepository<InventoryQuantity, Integer> quantityDao) {
+		return new InventoryCreator(memory, categoryDao, quantityDao);
 	}
 	
 
 	@Bean
-	public AbstractInventoryUpdater updater(
-		JpaRepository<InventoryName, String> nameDao,
-		JpaRepository<InventoryQuantity, Integer> quantityDao) {
-		return new InventoryUpdater(nameDao, quantityDao);
+	public AbstractInventoryUpdater updater(JpaRepository<InventoryQuantity, Integer> quantityDao) {
+		return new InventoryUpdater((InventoryQuantityRepository) quantityDao);
 	}
 	
 }

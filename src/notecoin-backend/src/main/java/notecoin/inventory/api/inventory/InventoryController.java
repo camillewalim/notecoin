@@ -1,9 +1,13 @@
 package notecoin.inventory.api.inventory;
 
+import java.util.function.Supplier;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater;
@@ -23,14 +27,26 @@ public class InventoryController {
 
 	@PutMapping("/inventory/create")
 	String create(String name, String category, String subcategory) {
-		creator.create(name, category, subcategory);
-		return "Created";
+		return illegalArguments(()->{
+			creator.create(name, category, subcategory);
+			return "Created";
+		});
 	}
 
 	@PostMapping("/inventory/update")
 	String update(String name, int quantity) {
-		updater.update(name, quantity);
-		return "Updated";
+		return illegalArguments(()->{
+			updater.update(name, quantity);
+			return "Updated";
+		});
 	}
 	
+	public <T> T illegalArguments(Supplier<T> supplier) {
+		try {
+	        return supplier.get();
+	     }
+	    catch (IllegalArgumentException exc) {
+	         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exc.getMessage(), exc);
+	    }
+	}
 }

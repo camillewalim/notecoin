@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import lombok.AllArgsConstructor;
 import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.model.InventoryQuantity;
 
 /**
  * @author camille.walim
@@ -20,6 +21,7 @@ public class InventoryCreator implements AbstractInventoryCreator{
 	
 	private JpaRepository<InventoryName, String> nameDao;
 	private JpaRepository<InventoryCategory, String> categoryDao;
+	private JpaRepository<InventoryQuantity, Integer> quantityDao;
 	
 	public InventoryName create(String name, String category, @Nullable String subcategory) {
 		if(name==null || category==null) 
@@ -64,8 +66,10 @@ public class InventoryCreator implements AbstractInventoryCreator{
 					});
 				
 				InventoryName name_n = new InventoryName(name, name_category); 
-				;
+				
 				nameDao.save(name_n);
+				quantityDao.save(new InventoryQuantity(0, name_n));
+				
 				categoryDao.flush();
 				nameDao.flush();
 				

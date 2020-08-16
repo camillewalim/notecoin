@@ -1,10 +1,9 @@
 package notecoin.inventory.domain.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import lombok.AllArgsConstructor;
 import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
  * @author camille.walim
@@ -14,12 +13,17 @@ import notecoin.inventory.domain.model.InventoryQuantity;
 @AllArgsConstructor
 public class InventoryUpdater implements AbstractInventoryUpdater{
 	
-	private JpaRepository<InventoryName, String> nameDao;
-	private JpaRepository<InventoryQuantity, Integer> quantityDao;
+	private InventoryQuantityRepository quantityDao;
 	
 	@Override
 	public InventoryQuantity update(String name, int quantity) {
-		throw new RuntimeException("not implemented"); 
+		return quantityDao
+			.findByName(new InventoryName(name,null))
+			.map(iq -> {
+				iq.setQuantity(quantity);
+				return iq;
+			})
+			.orElseThrow(() -> new IllegalArgumentException("Such inventory name do not exist. Please create it first."));
 	}
 	
 }
