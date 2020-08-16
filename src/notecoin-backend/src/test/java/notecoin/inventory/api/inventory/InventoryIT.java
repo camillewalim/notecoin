@@ -44,7 +44,7 @@ class InventoryIT {
 			verify(creator,times(1)).create(any(),any(),any());
 		// Service check existing taxonomy
 			verify(nameDao,times(1)).findById(any());
-			verify(catDao,times(1)).findById(any());
+			verify(catDao,times(2)).findById(any());
 		// Service save one category and one name associated to it.
 			verify(catDao,times(1)).save(any());
 			verify(nameDao,times(1)).save(any());

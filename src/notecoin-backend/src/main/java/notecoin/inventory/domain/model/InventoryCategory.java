@@ -30,10 +30,10 @@ public class InventoryCategory {
 	@Id
 	private String name;
 	
-	@ManyToOne(fetch=FetchType.LAZY) @Setter
+	@ManyToOne(fetch=FetchType.EAGER) @Setter
 	private InventoryCategory supercategory;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name = "SUPERCATEGORY_NAME",nullable=true)
 	private List<InventoryCategory> subcategories;
 	

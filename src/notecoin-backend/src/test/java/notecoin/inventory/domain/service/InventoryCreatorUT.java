@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,8 +35,11 @@ public class InventoryCreatorUT {
 	InventoryCategory fruit_cat = InventoryCategory .createPath(vegetable, fruit);
 	InventoryName banana_name = new InventoryName(banana, fruit_cat);
 	{
-		when(catDao.findById(anyString())).thenAnswer(i -> i.getArgument(0, String.class)==fruit ? fruit_cat: null);
-		when(nameDao.findById(anyString())).thenAnswer(i -> i.getArgument(0, String.class)==banana ? banana_name: null);
+		when(catDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(
+					i.getArgument(0, String.class)==fruit ? fruit_cat
+				: 	i.getArgument(0, String.class)==vegetable ? fruit_cat.getSupercategory()
+				:	null));
+		when(nameDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, String.class)==banana ? banana_name: null));
 	}
 	
 	@Test
@@ -51,7 +56,7 @@ public class InventoryCreatorUT {
 	
 	@Test
 	public void createInventoryFromNonExistingSubCategoryWithExistingParent() {
-		InventoryName result = service.create("cucumber", "greens", vegetable);
+		InventoryName result = service.create("cucumber", vegetable, "greens");
 		assertEquals(result.getCategory().getName(), "greens");
 		assertEquals(result.getCategory().getSupercategory(), fruit_cat.getSupercategory());
 	}
@@ -59,8 +64,8 @@ public class InventoryCreatorUT {
 	@Test
 	public void createInventoryFromNonExistingSubCategoryWithNonExistingParent() {
 		InventoryName result = service.create("car", "machine", "vehicule");
-		assertEquals(result.getCategory().getName(), "machine");
-		assertEquals(result.getCategory().getSupercategory().getName(), "vehicule");
+		assertEquals(result.getCategory().getName(), "vehicule");
+		assertEquals(result.getCategory().getSupercategory().getName(), "machine");
 	}
 	
 	@Test
