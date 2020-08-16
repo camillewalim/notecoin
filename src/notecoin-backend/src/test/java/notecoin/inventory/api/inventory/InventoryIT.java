@@ -21,7 +21,7 @@ import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
-import notecoin.inventory.infra.data.InventoryQuantityRepository;
+import notecoin.inventory.infra.data.InstructionRepository;
 
 /**
  * @author camille.walim
@@ -41,7 +41,7 @@ class InventoryIT {
 	
 	@MockBean	JpaRepository<Product, String> productDao;
 	@MockBean	JpaRepository<ProductClass, String> productClassDao;
-	@MockBean	InventoryQuantityRepository quantityDao;
+	@MockBean	InstructionRepository instructionDao;
 	
 	
 
@@ -73,7 +73,7 @@ class InventoryIT {
 		// Service activation
 			verify(browser,times(1)).getAll();
 		// Service query CRUD one time
-			verify(quantityDao,times(1)).findAll();
+			verify(instructionDao,times(1)).findAll();
 	}
 	
 

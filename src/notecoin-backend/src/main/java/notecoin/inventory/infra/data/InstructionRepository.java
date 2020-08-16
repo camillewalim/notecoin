@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.Product;
 
 /**
@@ -12,8 +12,8 @@ import notecoin.inventory.domain.model.product.Product;
  * 
  * JPA repository
  */
-public interface InventoryQuantityRepository extends JpaRepository<InventoryQuantity, Integer> {
+public interface InstructionRepository extends JpaRepository<Instruction, Integer> {
 	
-	Optional<InventoryQuantity> findByProduct(Product product);
+	Optional<Instruction> findByProduct(Product product);
 	
 }

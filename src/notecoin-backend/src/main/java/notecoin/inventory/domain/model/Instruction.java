@@ -1,6 +1,10 @@
 package notecoin.inventory.domain.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import notecoin.inventory.domain.model.product.Product;
 
 /**
@@ -21,11 +26,16 @@ import notecoin.inventory.domain.model.product.Product;
  */
 @Entity
 @NoArgsConstructor @Getter
-public class InventoryQuantity {
+public class Instruction {
 	
-	public InventoryQuantity(int quantity, Product product) {
+	public Instruction(int quantity, Product product, Type type, Date date, Date maturity) {
 		setQuantity(quantity);
 		setProduct(product);
+		setDate(date);
+		setMaturity(maturity);
+		this.type = type;
+		if(type==Type.taken || type==Type.given)
+			this.maturity = this.date;	//happening now !
 	}
 	
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,6 +47,13 @@ public class InventoryQuantity {
 	@JsonIgnore
 	private Product product;
 	
+	public static enum Type{taken, given, receivable, payable}
+	@Enumerated(EnumType.STRING) 
+	private Type type; 
+	
+	@Setter private Date date;
+	@Setter private Date maturity;
+	
 
 	public void setQuantity(int quantity) {
 		if(quantity < 0) throw new IllegalStateException("a quantity should be positive");
@@ -47,4 +64,6 @@ public class InventoryQuantity {
 		if(product==null) throw new IllegalStateException("a quantity inventory should be properly named");
 		this.product = product;
 	}
+
+	
 }

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import lombok.AllArgsConstructor;
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.Product;
-import notecoin.inventory.infra.data.InventoryQuantityRepository;
+import notecoin.inventory.infra.data.InstructionRepository;
 
 /**
  * @author camille.walim
@@ -16,16 +16,16 @@ import notecoin.inventory.infra.data.InventoryQuantityRepository;
 @AllArgsConstructor
 public class InventoryBrowser implements AbstractInventoryBrowser{
 	
-	private InventoryQuantityRepository quantityDao;
+	private InstructionRepository instructionDao;
 
 	@Override
-	public List<InventoryQuantity> getAll() {
-		return quantityDao.findAll();
+	public List<Instruction> getAll() {
+		return instructionDao.findAll();
 	}
 
 	@Override
-	public InventoryQuantity get(String name) {
-		return quantityDao
+	public Instruction get(String name) {
+		return instructionDao
 			.findByProduct(new Product(name))
 			.orElseThrow(()-> new NoSuchElementException(name + "do not exist in the inventory"));
 	}

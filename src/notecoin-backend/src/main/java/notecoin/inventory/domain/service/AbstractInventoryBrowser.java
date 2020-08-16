@@ -2,7 +2,7 @@ package notecoin.inventory.domain.service;
 
 import java.util.List;
 
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 
 /**
  * @author camille.walim
@@ -11,7 +11,7 @@ import notecoin.inventory.domain.model.InventoryQuantity;
  */
 public interface AbstractInventoryBrowser{
 	
-	List<InventoryQuantity> getAll();
-	InventoryQuantity get(String name);
+	List<Instruction> getAll();
+	Instruction get(String name);
 
 }

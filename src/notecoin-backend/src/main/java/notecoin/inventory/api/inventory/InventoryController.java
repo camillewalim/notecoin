@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser;
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater;
@@ -44,6 +44,7 @@ public class InventoryController {
 	}
 
 	@PostMapping("/inventory/update")
+	@Deprecated
 	String update(String product, int quantity) {
 		return illegalArguments(()->{
 			updater.update(product, quantity);
@@ -53,7 +54,7 @@ public class InventoryController {
 	
 
 	@GetMapping("/inventory/browse")
-	List<InventoryQuantity> browse(String product) {
+	List<Instruction> browse(String product) {
 		return illegalArguments(()-> product==null ? browser.getAll() : Collections.singletonList(browser.get(product)));
 	}
 	

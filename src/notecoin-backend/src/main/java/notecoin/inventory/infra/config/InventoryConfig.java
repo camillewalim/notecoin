@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser;
@@ -13,7 +13,7 @@ import notecoin.inventory.domain.service.AbstractInventoryUpdater;
 import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
-import notecoin.inventory.infra.data.InventoryQuantityRepository;
+import notecoin.inventory.infra.data.InstructionRepository;
 
 /**
  * @author camille.walim
@@ -27,20 +27,20 @@ public class InventoryConfig {
 	public AbstractInventoryCreator creator(
 		JpaRepository<Product, String> productDao,
 		JpaRepository<ProductClass, String> productClassDao,
-		JpaRepository<InventoryQuantity, Integer> quantityDao) {
-		return new InventoryCreator(productDao, productClassDao, quantityDao);
+		JpaRepository<Instruction, Integer> instructionDao) {
+		return new InventoryCreator(productDao, productClassDao);
 	}
 	
 
 	@Bean
-	public AbstractInventoryUpdater updater(JpaRepository<InventoryQuantity, Integer> quantityDao) {
-		return new InventoryUpdater((InventoryQuantityRepository) quantityDao);
+	public AbstractInventoryUpdater updater(JpaRepository<Instruction, Integer> instructionDao) {
+		return new InventoryUpdater((InstructionRepository) instructionDao);
 	}
 	
 
 	@Bean
-	public AbstractInventoryBrowser browser(JpaRepository<InventoryQuantity, Integer> quantityDao) {
-		return new InventoryBrowser((InventoryQuantityRepository) quantityDao);
+	public AbstractInventoryBrowser browser(JpaRepository<Instruction, Integer> instructionDao) {
+		return new InventoryBrowser((InstructionRepository) instructionDao);
 	}
 	
 	

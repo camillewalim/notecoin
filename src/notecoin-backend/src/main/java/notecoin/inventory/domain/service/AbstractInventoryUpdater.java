@@ -1,6 +1,6 @@
 package notecoin.inventory.domain.service;
 
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 
 /**
  * @author camille.walim
@@ -9,6 +9,6 @@ import notecoin.inventory.domain.model.InventoryQuantity;
  */
 public interface AbstractInventoryUpdater{
 	
-	InventoryQuantity update(String name, int quantity);
+	Instruction update(String name, int quantity);
 
 }

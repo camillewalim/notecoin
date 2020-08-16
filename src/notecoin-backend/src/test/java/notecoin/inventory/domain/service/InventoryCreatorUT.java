@@ -16,7 +16,7 @@ import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.ProductClassRepository;
 import notecoin.inventory.infra.data.ProductRepository;
-import notecoin.inventory.infra.data.InventoryQuantityRepository;
+import notecoin.inventory.infra.data.InstructionRepository;
 
 /**
  * @author camille.walim
@@ -31,8 +31,8 @@ public class InventoryCreatorUT {
 
 	ProductClassRepository productClassDao = mock(ProductClassRepository.class);
 	ProductRepository productDao= mock(ProductRepository.class);
-	InventoryQuantityRepository quantityDao= mock(InventoryQuantityRepository.class);
-	InventoryCreator service = new InventoryCreator(productDao, productClassDao, quantityDao);
+	InstructionRepository instructionDao= mock(InstructionRepository.class);
+	InventoryCreator service = new InventoryCreator(productDao, productClassDao);
 	
 	ProductClass fruit_cat = ProductClass .createPath(vegetable, fruit);
 	Product banana_name = new Product(banana, fruit_cat);

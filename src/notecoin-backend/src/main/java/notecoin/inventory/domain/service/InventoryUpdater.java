@@ -1,9 +1,9 @@
 package notecoin.inventory.domain.service;
 
 import lombok.AllArgsConstructor;
-import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.Product;
-import notecoin.inventory.infra.data.InventoryQuantityRepository;
+import notecoin.inventory.infra.data.InstructionRepository;
 
 /**
  * @author camille.walim
@@ -13,17 +13,17 @@ import notecoin.inventory.infra.data.InventoryQuantityRepository;
 @AllArgsConstructor
 public class InventoryUpdater implements AbstractInventoryUpdater{
 	
-	private InventoryQuantityRepository quantityDao;
+	private InstructionRepository quantityDao;
 	
 	@Override
-	public InventoryQuantity update(String name, int quantity) {
+	public Instruction update(String name, int quantity) {
 		return quantityDao
 			.findByProduct(new Product(name))
 			.map(iq -> {
 				iq.setQuantity(quantity);
 				return iq;
 			})
-			.orElseThrow(() -> new IllegalArgumentException("Such inventory name do not exist. Please create it first."));
+			.orElseThrow(() -> new IllegalArgumentException("Feature not implemented"));
 	}
 	
 }
