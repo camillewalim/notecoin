@@ -8,7 +8,7 @@ import notecoin.inventory.infra.data.InventoryQuantityRepository;
 /**
  * @author camille.walim
  * 
- *"to create Inventory [...]"	
+ *"to update Inventory [...]"	
  */
 @AllArgsConstructor
 public class InventoryUpdater implements AbstractInventoryUpdater{

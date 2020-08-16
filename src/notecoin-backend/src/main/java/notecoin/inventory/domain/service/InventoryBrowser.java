@@ -1,15 +1,17 @@
 package notecoin.inventory.domain.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import lombok.AllArgsConstructor;
+import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
  * @author camille.walim
  * 
- *"to create Inventory [...]"	
+ *"to browse Inventory [...]"	
  */
 @AllArgsConstructor
 public class InventoryBrowser implements AbstractInventoryBrowser{
@@ -18,12 +20,14 @@ public class InventoryBrowser implements AbstractInventoryBrowser{
 
 	@Override
 	public List<InventoryQuantity> getAll() {
-		throw new RuntimeException("not implemented");
+		return quantityDao.findAll();
 	}
 
 	@Override
 	public InventoryQuantity get(String name) {
-		throw new RuntimeException("not implemented");
+		return quantityDao
+			.findByName(new InventoryName(name,null))
+			.orElseThrow(()-> new NoSuchElementException(name + "do not exist in the inventory"));
 	}
 	
 	

@@ -6,10 +6,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.assertj.core.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,12 +37,12 @@ public class InventoryBrowserUT {
 
 	{
 		when(quantityDao.findByName(any())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, InventoryName.class).getName()==banana ? banana_quantity :	null));
-		when(quantityDao.findAll()).thenAnswer(i -> Arrays.asList(banana_quantity));
+		when(quantityDao.findAll()).thenAnswer(i -> Collections.singletonList(banana_quantity));
 	}
 	
 	@Test
 	public void browseAll() {
-		assertEquals(service.getAll(), Arrays.asList(banana_quantity));
+		assertEquals(service.getAll(), Collections.singletonList(banana_quantity));
 	}
 	
 

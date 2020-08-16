@@ -68,12 +68,20 @@ class InventoryIT {
 
 	@Test
 	void browse_all_200() throws Exception {
-		web	.perform(MockMvcRequestBuilders.post("/inventory/browse"))
+		web	.perform(MockMvcRequestBuilders.get("/inventory/browse"))
 		      .andExpect(status().isOk());
 		// Service activation
 			verify(browser,times(1)).getAll();
 		// Service query CRUD one time
 			verify(quantityDao,times(1)).findAll();
+	}
+	
+
+	@Test
+	void browse_nonexisting_4xx() throws Exception {
+		web	.perform(MockMvcRequestBuilders.get("/inventory/browse?name=random"))
+		      .andExpect(status().isNotFound());
+		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
 	
 }

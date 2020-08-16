@@ -52,7 +52,7 @@ public class InventoryController {
 	
 
 	@GetMapping("/inventory/browse")
-	List<InventoryQuantity> browse(@Nullable String name) {
+	List<InventoryQuantity> browse(String name) {
 		return illegalArguments(()-> name==null ? browser.getAll() : Collections.singletonList(browser.get(name)));
 	}
 	
