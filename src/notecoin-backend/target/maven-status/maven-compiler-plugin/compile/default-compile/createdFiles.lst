@@ -1,0 +1,6 @@
+notecoin\inventory\Application.class
+notecoin\utils\NonVerbose.class
+notecoin\utils\NonVerbose$RException.class
+notecoin\inventory\api\config\ApiConfig.class
+notecoin\utils\NonVerbose$FException.class
+notecoin\utils\NonVerbose$CException.class
