@@ -1,6 +1,7 @@
 package notecoin.inventory.api.inventory;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
@@ -51,8 +52,16 @@ public class InventoryController {
 		return illegalArguments(()-> creator.updateDetails(name, origin, price, currency, details));
 	}
 
+	@PostMapping("/inventory/instruction")
+	String instruction(String product, AbstractInventoryUpdater.Type type, int quantity, Date when, Date until) {
+		return illegalArguments(()->{
+			updater.instruction(product, type, quantity, when, until);
+			return "ok";
+		});
+	}
+	
 	@PostMapping("/inventory/update")
-	@Deprecated
+	@Deprecated // Mk-I feature (inventory non-event based)
 	String update(String product, int quantity) {
 		return illegalArguments(()->{
 			updater.update(product, quantity);

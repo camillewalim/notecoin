@@ -56,4 +56,10 @@ class InstructionPT {
 		assertThrows(IllegalStateException.class, ()-> new Instruction(100, null, Instruction.Type.given, new Date(), null ));
 	}
 
+	@Test
+	void shouldNotMatureInThePast() {
+		Date before = new Date();
+		assertThrows(IllegalStateException.class, ()-> new Instruction(100, null, Instruction.Type.given, new Date(), before));
+	}
+
 }

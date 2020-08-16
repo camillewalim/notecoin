@@ -14,6 +14,7 @@ import notecoin.inventory.domain.model.product.Product;
  */
 public interface InstructionRepository extends JpaRepository<Instruction, Integer> {
 	
+	@Deprecated // Mk-I feature (inventory non-event based)
 	Optional<Instruction> findByProduct(Product product);
 	
 }

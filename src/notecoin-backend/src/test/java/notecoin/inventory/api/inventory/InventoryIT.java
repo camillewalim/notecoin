@@ -64,11 +64,17 @@ class InventoryIT {
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
 	
-	@Test
+	@Test @Deprecated // MK-I feature
 	void post_instruction_without_create_4xx() throws Exception {
 		web	.perform(MockMvcRequestBuilders.post("/inventory/update?product=banana&quantity=200"))
 		      .andExpect(status().isBadRequest());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
+	}
+	
+	@Test
+	void post_instruction_give() throws Exception{ // by analogy this test also integration of take / borrow / lend 
+		web	.perform(MockMvcRequestBuilders.post("/inventory/instruction/give?product=banana&quantity=200"))
+	      .andExpect(status().isOk());
 	}
 
 	@Test

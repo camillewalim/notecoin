@@ -1,5 +1,7 @@
 package notecoin.inventory.domain.service;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.Product;
@@ -16,6 +18,7 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 	private InstructionRepository quantityDao;
 	
 	@Override
+	@Deprecated // Mk-I feature (inventory non-event based)
 	public Instruction update(String name, int quantity) {
 		return quantityDao
 			.findByProduct(new Product(name))
@@ -24,6 +27,11 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 				return iq;
 			})
 			.orElseThrow(() -> new IllegalArgumentException("Feature not implemented"));
+	}
+	
+	@Override
+	public Instruction instruction(String name, AbstractInventoryUpdater.Type type, int quantity, Date date, Date until) {
+		throw new RuntimeException("not implemented");
 	}
 	
 }

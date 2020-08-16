@@ -32,12 +32,10 @@ public class Instruction {
 		setQuantity(quantity);
 		setProduct(product);
 		setDate(date);
-		setMaturity(maturity);
 		this.type = type;
-		if(type==Type.taken || type==Type.given)
-			this.maturity = this.date;	//happening now !
+		setMaturity(type==Type.taken || type==Type.given ? this.date : maturity);
 	}
-	
+
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 
@@ -52,8 +50,7 @@ public class Instruction {
 	private Type type; 
 	
 	@Setter private Date date;
-	@Setter private Date maturity;
-	
+	private Date maturity;
 
 	public void setQuantity(int quantity) {
 		if(quantity < 0) throw new IllegalStateException("a quantity should be positive");
@@ -65,5 +62,9 @@ public class Instruction {
 		this.product = product;
 	}
 
+	private void setMaturity(Date maturity) {
+		if(maturity.getTime() < this.date.getTime()) throw new IllegalStateException("could not mature in the past");
+		this.maturity = maturity;
+	}
 	
 }
