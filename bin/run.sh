@@ -1,0 +1,2 @@
+echo "launching application"
+java -jar notecoin-backend.jar | tee backend.log >/dev/null & (sleep 5s && start http://localhost:8080/swagger-ui.html && echo "application is running." && echo "logs & H2 DB (permanent so beware of locking) are present in /bin" && echo "Ctrl-C to kill the application") & wait
