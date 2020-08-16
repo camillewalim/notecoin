@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import lombok.AllArgsConstructor;
-import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
@@ -26,7 +26,7 @@ public class InventoryBrowser implements AbstractInventoryBrowser{
 	@Override
 	public InventoryQuantity get(String name) {
 		return quantityDao
-			.findByName(new InventoryName(name,null))
+			.findByProduct(new Product(name))
 			.orElseThrow(()-> new NoSuchElementException(name + "do not exist in the inventory"));
 	}
 	

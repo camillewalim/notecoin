@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import notecoin.inventory.domain.model.InventoryCategory;
-import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
@@ -39,7 +39,7 @@ class InventoryIT {
 	@SpyBean	InventoryUpdater updater;
 	@SpyBean	InventoryBrowser browser;
 	
-	@MockBean	JpaRepository<InventoryName, String> nameDao;
+	@MockBean	JpaRepository<Product, String> productDao;
 	@MockBean	JpaRepository<InventoryCategory, String> catDao;
 	@MockBean	InventoryQuantityRepository quantityDao;
 	
@@ -47,21 +47,21 @@ class InventoryIT {
 
 	@Test
 	void create_200() throws Exception {
-		web	.perform(MockMvcRequestBuilders.put("/inventory/create?name=banana&category=vegetable&subcategory=fruit"))
+		web	.perform(MockMvcRequestBuilders.put("/inventory/create?product=banana&category=vegetable&subcategory=fruit"))
 		      .andExpect(status().isOk());
 		// Service activation
 			verify(creator,times(1)).create(any(),any(),any());
 		// Service check existing taxonomy
-			verify(nameDao,times(1)).findById(any());
+			verify(productDao,times(1)).findById(any());
 			verify(catDao,times(2)).findById(any());
 		// Service save one category and one name associated to it.
 			verify(catDao,times(1)).save(any());
-			verify(nameDao,times(1)).save(any());
+			verify(productDao,times(1)).save(any());
 	}
 	
 	@Test
 	void update_without_create_4xx() throws Exception {
-		web	.perform(MockMvcRequestBuilders.post("/inventory/update?name=banana&quantity=200"))
+		web	.perform(MockMvcRequestBuilders.post("/inventory/update?product=banana&quantity=200"))
 		      .andExpect(status().isBadRequest());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
@@ -79,7 +79,7 @@ class InventoryIT {
 
 	@Test
 	void browse_nonexisting_4xx() throws Exception {
-		web	.perform(MockMvcRequestBuilders.get("/inventory/browse?name=random"))
+		web	.perform(MockMvcRequestBuilders.get("/inventory/browse?product=random"))
 		      .andExpect(status().isNotFound());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}

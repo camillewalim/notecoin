@@ -33,29 +33,29 @@ public class InventoryController {
 	private AbstractInventoryUpdater updater;
 	@Autowired
 	private AbstractInventoryBrowser browser;
+	
 
 	@PutMapping("/inventory/create")
-	String create(String name, String category, @Nullable String subcategory) {
+	String create(String product, String category, @Nullable String subcategory) {
 		return illegalArguments(()->{
-			creator.create(name, category, subcategory);
+			creator.create(product, category, subcategory);
 			return "Created";
 		});
 	}
 
 	@PostMapping("/inventory/update")
-	String update(String name, int quantity) {
+	String update(String product, int quantity) {
 		return illegalArguments(()->{
-			updater.update(name, quantity);
+			updater.update(product, quantity);
 			return "Updated";
 		});
 	}
 	
 
 	@GetMapping("/inventory/browse")
-	List<InventoryQuantity> browse(String name) {
-		return illegalArguments(()-> name==null ? browser.getAll() : Collections.singletonList(browser.get(name)));
+	List<InventoryQuantity> browse(String product) {
+		return illegalArguments(()-> product==null ? browser.getAll() : Collections.singletonList(browser.get(product)));
 	}
-	
 	
 	public <T> T illegalArguments(Supplier<T> supplier) {
 		try {

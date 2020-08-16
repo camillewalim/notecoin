@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import notecoin.inventory.domain.model.product.Product;
 
 /**
  * @author camille.walim
@@ -22,9 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor @Getter
 public class InventoryQuantity {
 	
-	public InventoryQuantity(int quantity, InventoryName name) {
+	public InventoryQuantity(int quantity, Product product) {
 		setQuantity(quantity);
-		setName(name);
+		setProduct(product);
 	}
 	
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
@@ -32,9 +33,9 @@ public class InventoryQuantity {
 
 	private int quantity;
 	
-	@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name = "NAME")
+	@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name = "PRODUCT")
 	@JsonIgnore
-	private InventoryName name;
+	private Product product;
 	
 
 	public void setQuantity(int quantity) {
@@ -42,8 +43,8 @@ public class InventoryQuantity {
 		this.quantity = quantity;
 	}
 
-	public void setName(InventoryName name) {
-		if(name==null) throw new IllegalStateException("a quantity inventory should be properly named");
-		this.name = name;
+	public void setProduct(Product product) {
+		if(product==null) throw new IllegalStateException("a quantity inventory should be properly named");
+		this.product = product;
 	}
 }

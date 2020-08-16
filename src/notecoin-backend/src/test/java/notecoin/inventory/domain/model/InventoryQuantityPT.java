@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
+import notecoin.inventory.domain.model.product.Product;
+
 
 /**
  * @author camille.walim
@@ -20,14 +22,14 @@ class InventoryQuantityPT {
 	void hasQuantityAndName() {
 		String banana = "banana";
 		int quantity = 100;
-		InventoryQuantity iq = new InventoryQuantity(quantity, new InventoryName(banana,null));
+		InventoryQuantity iq = new InventoryQuantity(quantity, new Product(banana,null));
 		assertEquals(iq.getQuantity(), quantity);
-		assertEquals(iq.getName().getName(), banana);
+		assertEquals(iq.getProduct().getName(), banana);
 	}
 	
 	@Test
 	void shouldBePositive() {
-		assertThrows(IllegalStateException.class, ()-> new InventoryQuantity(-1, new InventoryName("some",null)));
+		assertThrows(IllegalStateException.class, ()-> new InventoryQuantity(-1, new Product("some",null)));
 	}
 	
 	@Test

@@ -1,8 +1,8 @@
 package notecoin.inventory.domain.service;
 
 import lombok.AllArgsConstructor;
-import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
@@ -18,7 +18,7 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 	@Override
 	public InventoryQuantity update(String name, int quantity) {
 		return quantityDao
-			.findByName(new InventoryName(name,null))
+			.findByProduct(new Product(name))
 			.map(iq -> {
 				iq.setQuantity(quantity);
 				return iq;

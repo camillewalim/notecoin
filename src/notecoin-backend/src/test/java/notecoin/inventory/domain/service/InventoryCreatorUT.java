@@ -13,9 +13,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import notecoin.inventory.domain.model.InventoryCategory;
-import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InventoryCategoryRepository;
-import notecoin.inventory.infra.data.InventoryNameRepository;
+import notecoin.inventory.infra.data.ProductRepository;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
@@ -30,12 +30,12 @@ public class InventoryCreatorUT {
 	
 
 	InventoryCategoryRepository catDao = mock(InventoryCategoryRepository.class);
-	InventoryNameRepository nameDao= mock(InventoryNameRepository.class);
+	ProductRepository nameDao= mock(ProductRepository.class);
 	InventoryQuantityRepository quantityDao= mock(InventoryQuantityRepository.class);
 	InventoryCreator service = new InventoryCreator(nameDao, catDao, quantityDao);
 	
 	InventoryCategory fruit_cat = InventoryCategory .createPath(vegetable, fruit);
-	InventoryName banana_name = new InventoryName(banana, fruit_cat);
+	Product banana_name = new Product(banana, fruit_cat);
 	{
 		when(catDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(
 					i.getArgument(0, String.class)==fruit ? fruit_cat
@@ -46,33 +46,33 @@ public class InventoryCreatorUT {
 	
 	@Test
 	public void createInventoryFromExistingCategory() {
-		InventoryName result = service.create("apple", fruit, null);
+		Product result = service.create("apple", fruit, null);
 		assertEquals(result.getCategory(), fruit_cat);
 	}
 	
 	@Test
 	public void createInventoryFromNonExistingCategory() {
-		InventoryName result = service.create("cucumber", "greens", null);
+		Product result = service.create("cucumber", "greens", null);
 		assertEquals(result.getCategory().getName(), "greens");
 	}
 	
 	@Test
 	public void createInventoryFromNonExistingSubCategoryWithExistingParent() {
-		InventoryName result = service.create("cucumber", vegetable, "greens");
+		Product result = service.create("cucumber", vegetable, "greens");
 		assertEquals(result.getCategory().getName(), "greens");
 		assertEquals(result.getCategory().getSupercategory(), fruit_cat.getSupercategory());
 	}
 	
 	@Test
 	public void createInventoryFromNonExistingSubCategoryWithNonExistingParent() {
-		InventoryName result = service.create("car", "machine", "vehicule");
+		Product result = service.create("car", "machine", "vehicule");
 		assertEquals(result.getCategory().getName(), "vehicule");
 		assertEquals(result.getCategory().getSupercategory().getName(), "machine");
 	}
 	
 	@Test
 	public void ignoreCreateInventoryAlreadyExisting() {
-		InventoryName result = service.create(banana, "vegetable", "fruit");
+		Product result = service.create(banana, "vegetable", "fruit");
 		assertEquals(result, banana_name);
 	}
 

@@ -15,8 +15,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import notecoin.inventory.domain.model.InventoryCategory;
-import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
 /**
@@ -32,11 +32,11 @@ public class InventoryBrowserUT {
 	InventoryQuantityRepository quantityDao= mock(InventoryQuantityRepository.class);
 	InventoryBrowser service = new InventoryBrowser(quantityDao);
 	
-	InventoryName banana_name = new InventoryName(banana, new InventoryCategory());
+	Product banana_name = new Product(banana, new InventoryCategory());
 	InventoryQuantity banana_quantity = new InventoryQuantity(100, banana_name);
 
 	{
-		when(quantityDao.findByName(any())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, InventoryName.class).getName()==banana ? banana_quantity :	null));
+		when(quantityDao.findByProduct(any())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, Product.class).getName()==banana ? banana_quantity :	null));
 		when(quantityDao.findAll()).thenAnswer(i -> Collections.singletonList(banana_quantity));
 	}
 	

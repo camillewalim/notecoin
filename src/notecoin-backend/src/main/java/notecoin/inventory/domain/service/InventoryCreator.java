@@ -8,8 +8,8 @@ import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import notecoin.inventory.domain.model.InventoryCategory;
-import notecoin.inventory.domain.model.InventoryName;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.Product;
 
 /**
  * @author camille.walim
@@ -19,11 +19,11 @@ import notecoin.inventory.domain.model.InventoryQuantity;
 @AllArgsConstructor
 public class InventoryCreator implements AbstractInventoryCreator{
 	
-	private JpaRepository<InventoryName, String> nameDao;
+	private JpaRepository<Product, String> nameDao;
 	private JpaRepository<InventoryCategory, String> categoryDao;
 	private JpaRepository<InventoryQuantity, Integer> quantityDao;
 	
-	public InventoryName create(String name, String category, @Nullable String subcategory) {
+	public Product create(String name, String category, @Nullable String subcategory) {
 		if(name==null || category==null) 
 			throw new IllegalArgumentException("name or category could not be null");
 		
@@ -65,7 +65,7 @@ public class InventoryCreator implements AbstractInventoryCreator{
 						return category_c_nonnull;
 					});
 				
-				InventoryName name_n = new InventoryName(name, name_category); 
+				Product name_n = new Product(name, name_category); 
 				
 				nameDao.save(name_n);
 				quantityDao.save(new InventoryQuantity(0, name_n));

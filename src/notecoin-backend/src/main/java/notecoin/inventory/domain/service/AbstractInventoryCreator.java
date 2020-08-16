@@ -1,6 +1,6 @@
 package notecoin.inventory.domain.service;
 
-import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.model.product.Product;
 
 /**
  * @author camille.walim
@@ -9,6 +9,6 @@ import notecoin.inventory.domain.model.InventoryName;
  */
 public interface AbstractInventoryCreator{
 	
-	InventoryName create(String name, String category, String subcategory);
+	Product create(String name, String category, String subcategory);
 
 }
