@@ -1,6 +1,7 @@
 ### Java ###
 /target/
 /build/
+DummyTester.java
 
 ### STS ###
 .apt_generated
