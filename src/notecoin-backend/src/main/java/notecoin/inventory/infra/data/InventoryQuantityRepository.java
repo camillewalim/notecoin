@@ -1,5 +1,7 @@
 package notecoin.inventory.infra.data;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import notecoin.inventory.domain.model.InventoryQuantity;
@@ -9,4 +11,8 @@ import notecoin.inventory.domain.model.InventoryQuantity;
  * 
  * JPA repository
  */
-public interface InventoryQuantityRepository extends JpaRepository<InventoryQuantity, Integer>{}
+public interface InventoryQuantityRepository extends JpaRepository<InventoryQuantity, Integer> {
+	
+	Optional<InventoryQuantity> findByName(String name);
+	
+}

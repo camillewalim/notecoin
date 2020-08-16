@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryName;
+import notecoin.inventory.domain.model.InventoryQuantity;
 import notecoin.inventory.domain.service.InventoryCreator;
+import notecoin.inventory.domain.service.InventoryUpdater;
 
 /**
  * @author camille.walim
@@ -33,12 +35,15 @@ class InventoryIT {
 	MockMvc web;
 
 	@SpyBean	InventoryCreator creator;
+	@SpyBean	InventoryUpdater updater;
+	
 	@MockBean	JpaRepository<InventoryName, String> nameDao;
 	@MockBean	JpaRepository<InventoryCategory, String> catDao;
+	@MockBean	JpaRepository<InventoryQuantity, Integer> quantityDao;
 
 	@Test
-	void ping_200() throws Exception {
-		web	.perform(MockMvcRequestBuilders.get("/inventory/create?name=banana&category=vegetable&subcategory=fruit"))
+	void create_200() throws Exception {
+		web	.perform(MockMvcRequestBuilders.put("/inventory/create?name=banana&category=vegetable&subcategory=fruit"))
 		      .andExpect(status().isOk());
 		// Service activation
 			verify(creator,times(1)).create(any(),any(),any());
@@ -48,6 +53,18 @@ class InventoryIT {
 		// Service save one category and one name associated to it.
 			verify(catDao,times(1)).save(any());
 			verify(nameDao,times(1)).save(any());
+	}
+	
+	@Test
+	void update_200() throws Exception {
+		web	.perform(MockMvcRequestBuilders.post("/inventory/update?name=banana&quantity=200"))
+		      .andExpect(status().isOk());
+		// Service activation
+			verify(updater,times(1)).update(any(),any());
+		// Service check existing taxonomy
+			verify(nameDao,times(1)).findById(any());
+		// Service update the quantity
+			verify(quantityDao,times(1)).findById(any());
 	}
 	
 }
