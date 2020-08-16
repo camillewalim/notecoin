@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import notecoin.inventory.domain.model.InventoryCategory;
+import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
@@ -40,7 +40,7 @@ class InventoryIT {
 	@SpyBean	InventoryBrowser browser;
 	
 	@MockBean	JpaRepository<Product, String> productDao;
-	@MockBean	JpaRepository<InventoryCategory, String> catDao;
+	@MockBean	JpaRepository<ProductClass, String> productClassDao;
 	@MockBean	InventoryQuantityRepository quantityDao;
 	
 	
@@ -53,9 +53,9 @@ class InventoryIT {
 			verify(creator,times(1)).create(any(),any(),any());
 		// Service check existing taxonomy
 			verify(productDao,times(1)).findById(any());
-			verify(catDao,times(2)).findById(any());
+			verify(productClassDao,times(2)).findById(any());
 		// Service save one category and one name associated to it.
-			verify(catDao,times(1)).save(any());
+			verify(productClassDao,times(1)).save(any());
 			verify(productDao,times(1)).save(any());
 	}
 	

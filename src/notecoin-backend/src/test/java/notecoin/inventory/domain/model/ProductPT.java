@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
+import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.model.product.ProductDetailsAbstract;
 import notecoin.inventory.domain.model.product.ProductDetailsFruit;
@@ -21,19 +22,19 @@ public class ProductPT {
 	@Test
 	void hasAName() {
 		String banana = "banana";
-		assertEquals(new Product(banana, new InventoryCategory()).getName(),banana);
+		assertEquals(new Product(banana, new ProductClass()).getName(),banana);
 	}
 	
 	@Test
 	void hasACategory() {
 		String fruit = "fruit";
-		assertEquals(new Product("banana", new InventoryCategory("fruit", null, new ArrayList<>())).getCategory().getName(),fruit);
+		assertEquals(new Product("banana", new ProductClass("fruit", null, new ArrayList<>())).getCategory().getName(),fruit);
 	}
 
 	@Test
 	void hasGenericAndPolymorphicProperties() {
 		Product banana = new Product("banana",
-			new InventoryCategory("fruit", null, new ArrayList<>()), 
+			new ProductClass("fruit", null, new ArrayList<>()), 
 				new Date(), "Madagascar", 
 				12.5, "EUR", 
 				new ProductDetailsFruit("yellow", 10, 10, 0.2)

@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import notecoin.inventory.domain.model.InventoryCategory;
+import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
-import notecoin.inventory.infra.data.InventoryCategoryRepository;
+import notecoin.inventory.infra.data.ProductClassRepository;
 import notecoin.inventory.infra.data.ProductRepository;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
@@ -29,19 +29,19 @@ public class InventoryCreatorUT {
 	String vegetable="vegetable", fruit="fruit", banana="banana";
 	
 
-	InventoryCategoryRepository catDao = mock(InventoryCategoryRepository.class);
-	ProductRepository nameDao= mock(ProductRepository.class);
+	ProductClassRepository productClassDao = mock(ProductClassRepository.class);
+	ProductRepository productDao= mock(ProductRepository.class);
 	InventoryQuantityRepository quantityDao= mock(InventoryQuantityRepository.class);
-	InventoryCreator service = new InventoryCreator(nameDao, catDao, quantityDao);
+	InventoryCreator service = new InventoryCreator(productDao, productClassDao, quantityDao);
 	
-	InventoryCategory fruit_cat = InventoryCategory .createPath(vegetable, fruit);
+	ProductClass fruit_cat = ProductClass .createPath(vegetable, fruit);
 	Product banana_name = new Product(banana, fruit_cat);
 	{
-		when(catDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(
+		when(productClassDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(
 					i.getArgument(0, String.class)==fruit ? fruit_cat
 				: 	i.getArgument(0, String.class)==vegetable ? fruit_cat.getSupercategory()
 				:	null));
-		when(nameDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, String.class)==banana ? banana_name: null));
+		when(productDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, String.class)==banana ? banana_name: null));
 	}
 	
 	@Test

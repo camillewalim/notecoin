@@ -1,16 +1,19 @@
 package notecoin.inventory.domain.model;
 
+import static notecoin.inventory.domain.model.product.ProductClass.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static notecoin.inventory.domain.model.InventoryCategory.*;
+
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
+
+import notecoin.inventory.domain.model.product.ProductDetailsFruit;
 
 /**
  * @author camille.walim
  * 
  * Property-Based test
  */
-class InventoryCategoryPT {
+class ProductClassPT {
 
 	@Test
 	void isMonadAndRecursive() {
@@ -21,6 +24,16 @@ class InventoryCategoryPT {
 		assertEquals(
 			getPath(createPath(vegetable,fruit,berry)),
 			Arrays.asList(berry,fruit,vegetable));
+	}
+	
+	@Test
+	void couldRepresentJavaPolymorphism() {
+		String vegetable = "Vegetable";
+		String fruit = "Fruit";
+		
+		assertEquals(
+			getPath(createPath(vegetable,fruit)),
+			getPath(createPath(ProductDetailsFruit.class)));
 	}
 
 }

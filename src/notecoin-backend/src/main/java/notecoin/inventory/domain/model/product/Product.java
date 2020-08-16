@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import notecoin.inventory.domain.model.InventoryCategory;
 
 /**
  * @author camille.walim
@@ -39,7 +38,7 @@ public class Product {
 	/** used for reference */
 	public Product(String name) {this.name = name;}
 	/** used for creation through categorisation */
-	public Product(String name, InventoryCategory category) {this(name); this.category = category; }
+	public Product(String name, ProductClass category) {this(name); this.category = category; }
 	
 	@Id
 	private String name;
@@ -47,7 +46,7 @@ public class Product {
 	@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name = "CATEGORY_NAME") 
 	@Setter
 	@JsonIgnore
-	private InventoryCategory category;
+	private ProductClass category;
 
 	private Date creation;		//when had this product being creating in inventory
 	private String origin;			//where is this kind of product produced

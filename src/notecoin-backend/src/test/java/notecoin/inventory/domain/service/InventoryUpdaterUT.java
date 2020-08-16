@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InventoryQuantityRepository;
 
@@ -30,7 +30,7 @@ public class InventoryUpdaterUT {
 	InventoryQuantityRepository quantityDao= mock(InventoryQuantityRepository.class);
 	InventoryUpdater service = new InventoryUpdater(quantityDao);
 	
-	Product banana_name = new Product(banana, new InventoryCategory());
+	Product banana_name = new Product(banana, new ProductClass());
 	InventoryQuantity banana_quantity = new InventoryQuantity(100, banana_name);
 
 	{

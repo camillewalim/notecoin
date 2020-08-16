@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import notecoin.inventory.domain.model.InventoryCategory;
 import notecoin.inventory.domain.model.InventoryQuantity;
+import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser;
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
@@ -25,10 +25,10 @@ public class InventoryConfig {
 
 	@Bean
 	public AbstractInventoryCreator creator(
-		JpaRepository<Product, String> memory,
-		JpaRepository<InventoryCategory, String> categoryDao,
+		JpaRepository<Product, String> productDao,
+		JpaRepository<ProductClass, String> productClassDao,
 		JpaRepository<InventoryQuantity, Integer> quantityDao) {
-		return new InventoryCreator(memory, categoryDao, quantityDao);
+		return new InventoryCreator(productDao, productClassDao, quantityDao);
 	}
 	
 
