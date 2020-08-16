@@ -28,4 +28,4 @@ DummyTester.java
 /.nb-gradle/
 
 ### Java ###
-.log
+*.log
