@@ -28,8 +28,8 @@ class ProductClassPT {
 	
 	@Test
 	void couldRepresentJavaPolymorphism() {
-		String vegetable = "Vegetable";
-		String fruit = "Fruit";
+		String vegetable = "vegetable";
+		String fruit = "fruit";
 		
 		assertEquals(
 			getPath(createPath(vegetable,fruit)),

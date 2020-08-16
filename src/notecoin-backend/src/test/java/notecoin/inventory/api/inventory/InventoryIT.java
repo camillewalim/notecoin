@@ -46,8 +46,8 @@ class InventoryIT {
 	
 
 	@Test
-	void create_200() throws Exception {
-		web	.perform(MockMvcRequestBuilders.put("/inventory/create?product=banana&category=vegetable&subcategory=fruit"))
+	void create_product_200() throws Exception {
+		web	.perform(MockMvcRequestBuilders.put("/inventory/product/create?product=banana&category=vegetable&subcategory=fruit"))
 		      .andExpect(status().isOk());
 		// Service activation
 			verify(creator,times(1)).create(any(),any(),any());
@@ -58,9 +58,16 @@ class InventoryIT {
 			verify(productClassDao,times(1)).save(any());
 			verify(productDao,times(1)).save(any());
 	}
+
+	@Test
+	void patch_product_details_4xx() throws Exception {
+		web	.perform(MockMvcRequestBuilders.patch("/inventory/product/details?product=banana&origin=peru"))
+		      .andExpect(status().isBadRequest());
+		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
+	}
 	
 	@Test
-	void update_without_create_4xx() throws Exception {
+	void post_instruction_without_create_4xx() throws Exception {
 		web	.perform(MockMvcRequestBuilders.post("/inventory/update?product=banana&quantity=200"))
 		      .andExpect(status().isBadRequest());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality

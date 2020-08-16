@@ -80,7 +80,7 @@ public class ProductClass {
 		return createPath(path.toArray(new String[path.size()]));
 	}
 	private static List<String> createPath(Class<? extends ProductDetailsAbstract> type, List<String> list){
-		list.add(type.getSimpleName().replace("ProductDetails",""));
+		list.add(type.getSimpleName().replace("ProductDetails","").toLowerCase());
 		if(! type.getSuperclass().equals(ProductDetailsAbstract.class))
 			return createPath((Class<? extends ProductDetailsAbstract>) type.getSuperclass(), list);
 		return list; 

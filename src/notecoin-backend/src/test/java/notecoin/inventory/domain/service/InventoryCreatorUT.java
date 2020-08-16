@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import notecoin.inventory.domain.model.product.ProductClass;
+import notecoin.inventory.domain.model.product.ProductDetailsFruit;
+import notecoin.inventory.domain.model.product.ProductDetailsGreens;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.ProductClassRepository;
 import notecoin.inventory.infra.data.ProductRepository;
@@ -35,13 +37,13 @@ public class InventoryCreatorUT {
 	InventoryCreator service = new InventoryCreator(productDao, productClassDao);
 	
 	ProductClass fruit_cat = ProductClass .createPath(vegetable, fruit);
-	Product banana_name = new Product(banana, fruit_cat);
+	Product banana_product = new Product(banana, fruit_cat);
 	{
 		when(productClassDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(
 					i.getArgument(0, String.class)==fruit ? fruit_cat
 				: 	i.getArgument(0, String.class)==vegetable ? fruit_cat.getSupercategory()
 				:	null));
-		when(productDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, String.class)==banana ? banana_name: null));
+		when(productDao.findById(anyString())).thenAnswer(i -> Optional.ofNullable(i.getArgument(0, String.class)==banana ? banana_product: null));
 	}
 	
 	@Test
@@ -69,11 +71,20 @@ public class InventoryCreatorUT {
 		assertEquals(result.getCategory().getName(), "vehicule");
 		assertEquals(result.getCategory().getSupercategory().getName(), "machine");
 	}
+
+	@Test
+	public void updateProductDetails() {
+		Product result = service.updateDetails(banana, "FRANCE", 10, "EUR", new ProductDetailsFruit("yellow", 10, 100, 0.8));
+		assertEquals(result, banana_product);
+		assertEquals(result.getOrigin(), "FRANCE");
+		assertEquals(result.getPrice(), 10.0);
+		assertEquals(result.getCurrency(), "EUR");
+	}
 	
 	@Test
 	public void ignoreCreateInventoryAlreadyExisting() {
 		Product result = service.create(banana, "vegetable", "fruit");
-		assertEquals(result, banana_name);
+		assertEquals(result, banana_product);
 	}
 
 	@Test
@@ -86,5 +97,15 @@ public class InventoryCreatorUT {
 		assertThrows(IllegalArgumentException.class, ()-> service.create(banana, "random", null));
 		assertThrows(IllegalArgumentException.class, ()-> service.create(banana, "vegetable", null));
 		assertThrows(IllegalArgumentException.class, ()-> service.create(banana, "vegetable", "random"));
+	}
+	
+	@Test
+	public void blockCreateInventoryWithConflictWithJavaPolymorphism() {
+		assertThrows(IllegalArgumentException.class, ()-> service.create("cucumber", "random", "greens"));
+	}
+	
+	@Test
+	public void blockUpdateProductDetailsWithConflictWithCategory() {
+		assertThrows(IllegalArgumentException.class, ()-> service.updateDetails(banana, "FRANCE", 10, "EUR", new ProductDetailsGreens("green", 10, 100, 0.8)));
 	}
 }

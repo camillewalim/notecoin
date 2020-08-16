@@ -1,13 +1,18 @@
 package notecoin.inventory.domain.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
+import javax.persistence.Column;
+
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.Nullable;
 
 import lombok.AllArgsConstructor;
 import notecoin.inventory.domain.model.product.ProductClass;
+import notecoin.inventory.domain.model.product.ProductDetailsAbstract;
 import notecoin.inventory.domain.model.product.Product;
 
 /**
@@ -74,4 +79,10 @@ public class InventoryCreator implements AbstractInventoryCreator{
 			});
 	}
 
+	public Product updateDetails(String name,
+			String origin, double price, String currency,
+			ProductDetailsAbstract details
+		) {
+		throw new RuntimeException("not implemented");
+	}
 }

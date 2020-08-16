@@ -38,7 +38,7 @@ public class Product {
 	/** used for reference */
 	public Product(String name) {this.name = name;}
 	/** used for creation through categorisation */
-	public Product(String name, ProductClass category) {this(name); this.category = category; }
+	public Product(String name, ProductClass category) {this(name); this.category = category; this.creation = new Date(); }
 	
 	@Id
 	private String name;
