@@ -1,11 +1,8 @@
 package notecoin.inventory.domain.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
+import static notecoin.inventory.domain.model.InventoryCategory.*;
 import java.util.Arrays;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,15 +19,7 @@ class InventoryCategoryPT {
 		String berry = "berry";
 		
 		assertEquals(
-			InventoryCategory.getPath(
-			Stream	.of(vegetable,fruit,berry)
-					.map(name -> new InventoryCategory(name, null, new ArrayList<>()))
-					.reduce((cat0, cat1) ->{
-						cat1.setSupercategory(cat0);
-						cat0.getSubcategories().add(cat1);
-						return cat1;
-					})
-					.get()),
+			getPath(createPath(vegetable,fruit,berry)),
 			Arrays.asList(berry,fruit,vegetable));
 	}
 

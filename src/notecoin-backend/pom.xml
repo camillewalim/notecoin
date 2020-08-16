@@ -112,6 +112,22 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+	      <plugins>
+	        <plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-surefire-plugin</artifactId>
+	          <version>3.0.0-M5</version>
+	          <configuration>
+	          	<includes>
+	          		<include>**/*PT.java</include>	<!-- Property Based Testing (model) -->
+	          		<include>**/*UT.java</include>	<!-- Unit Testing (services) -->
+	          		<include>**/*IT.java</include>	<!-- Integration Testing (controllers & infrastructure) -->
+	          	</includes>
+	          </configuration>
+	        </plugin>
+	      </plugins>
+	    </pluginManagement>
 	</build>
 	
 

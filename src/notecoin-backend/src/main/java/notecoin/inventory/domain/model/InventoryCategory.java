@@ -2,6 +2,7 @@ package notecoin.inventory.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -48,4 +49,15 @@ public class InventoryCategory {
 		return list;
 	}
 	
+	public static InventoryCategory createPath(String...categories){
+		return Stream	
+			.of(categories)
+			.map(name -> new InventoryCategory(name, null, new ArrayList<>()))
+			.reduce((cat0, cat1) ->{
+				cat1.setSupercategory(cat0);
+				cat0.getSubcategories().add(cat1);
+				return cat1;
+			})
+			.get();
+	}
 }

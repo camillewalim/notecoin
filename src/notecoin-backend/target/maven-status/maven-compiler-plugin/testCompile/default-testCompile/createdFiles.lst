@@ -1,1 +1,4 @@
 notecoin\inventory\ApplicationIT.class
+notecoin\inventory\domain\model\InventoryQuantityPT.class
+notecoin\inventory\domain\model\InventoryCategoryPT.class
+notecoin\inventory\domain\model\InventoryNamePT.class
