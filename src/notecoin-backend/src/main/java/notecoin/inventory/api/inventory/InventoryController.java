@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import notecoin.inventory.domain.model.Instruction;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.model.product.ProductDetailsAbstract;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser;
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
@@ -38,20 +38,17 @@ public class InventoryController {
 	
 
 	@PutMapping("/inventory/product/create")
-	String create(String product, String category, @Nullable String subcategory) {
+	String create(String product, String category, String subcategory) {
 		return illegalArguments(()->{
 			creator.create(product, category, subcategory);
 			return "Created";
 		});
 	}
 	@PatchMapping("/inventory/product/details")
-	String patch(String name, 
-		String origin, double price, String currency,
+	Product patch(String name, 
+		String origin, Double price, String currency,
 		ProductDetailsAbstract details) {
-		return illegalArguments(()->{
-			creator.updateDetails(name, origin, price, currency, details);
-			return "Created";
-		});
+		return illegalArguments(()-> creator.updateDetails(name, origin, price, currency, details));
 	}
 
 	@PostMapping("/inventory/update")

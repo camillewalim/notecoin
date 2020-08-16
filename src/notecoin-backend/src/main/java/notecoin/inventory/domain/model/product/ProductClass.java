@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,7 +36,7 @@ import lombok.Setter;
 	The two situations cohabitate together. Users are allowed to create as many arbitrary categories as they want as long as they do not contradict the existing hard-coded java polymorphism.
  */
 @Entity
-@NoArgsConstructor @AllArgsConstructor @Builder @Getter 
+@NoArgsConstructor @AllArgsConstructor @Builder @Getter @EqualsAndHashCode(of = "name") 
 public class ProductClass {
 	
 	@Id
@@ -48,9 +49,6 @@ public class ProductClass {
 	@JoinColumn(name = "SUPERCATEGORY_NAME",nullable=true)
 	@JsonIgnore
 	private List<ProductClass> subcategories;
-	
-	
-	
 	
 	public static List<String> getPath(ProductClass cat){
 		return getPath(cat, new ArrayList<>());
@@ -75,14 +73,17 @@ public class ProductClass {
 			.get();
 	}
 	public static ProductClass createPath(Class<? extends ProductDetailsAbstract> type){
-		List<String> path = createPath(type, new ArrayList<>());
+		List<String> path = detectPath(type, new ArrayList<>());
 		Collections.reverse(path);
 		return createPath(path.toArray(new String[path.size()]));
 	}
-	private static List<String> createPath(Class<? extends ProductDetailsAbstract> type, List<String> list){
+	@SuppressWarnings("unchecked")
+	public static List<String> detectPath(Class<? extends ProductDetailsAbstract> type, List<String> list){
+		if(type.equals(ProductDetailsAbstract.class)) return list; //guard
+		
 		list.add(type.getSimpleName().replace("ProductDetails","").toLowerCase());
 		if(! type.getSuperclass().equals(ProductDetailsAbstract.class))
-			return createPath((Class<? extends ProductDetailsAbstract>) type.getSuperclass(), list);
+			return detectPath((Class<? extends ProductDetailsAbstract>) type.getSuperclass(), list);
 		return list; 
 	}
 }

@@ -1,19 +1,21 @@
 package notecoin.inventory.domain.service;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import javax.persistence.Column;
-
-import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 import lombok.AllArgsConstructor;
+import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.ProductDetailsAbstract;
-import notecoin.inventory.domain.model.product.Product;
 
 /**
  * @author camille.walim
@@ -25,6 +27,12 @@ public class InventoryCreator implements AbstractInventoryCreator{
 	
 	private JpaRepository<Product, String> productDao;
 	private JpaRepository<ProductClass, String> productClassDao;
+	
+	@SuppressWarnings("unchecked")
+	private final static Map<String, String> productClassInJava = Stream
+		.of(((JsonSubTypes)ProductDetailsAbstract.class.getAnnotation(JsonSubTypes.class)).value())
+		.map(type -> ProductClass.detectPath((Class<? extends ProductDetailsAbstract>)type.value(), new ArrayList<>()))
+		.collect(HashMap::new, (m,path)->m.put(path.get(0), path.size()>1 ? path.get(1): null), HashMap::putAll);
 	
 	public Product create(String name, String category, @Nullable String subcategory) {
 		if(name==null || category==null) 
@@ -39,6 +47,11 @@ public class InventoryCreator implements AbstractInventoryCreator{
 					.map(c -> supercategory!=null && ! c.getSupercategory().getName().equals(supercategory))
 					.orElse(false))
 			throw new IllegalArgumentException(thiscategory + " is already a sub-category of " + category_c.getSupercategory().getName());
+		
+		if(Optional	.ofNullable(productClassInJava.get(thiscategory))
+					.map(supercategoryInJava -> supercategory != null && ! supercategoryInJava.equals(supercategory))
+					.orElse(false))
+			throw new IllegalArgumentException(thiscategory + " is already a sub-category (in JAVA) of " + productClassInJava.get(thiscategory));
 		
 		return productDao.findById(name)
 			.map(name_n -> {
@@ -80,9 +93,18 @@ public class InventoryCreator implements AbstractInventoryCreator{
 	}
 
 	public Product updateDetails(String name,
-			String origin, double price, String currency,
+			String origin, Double price, String currency,
 			ProductDetailsAbstract details
 		) {
-		throw new RuntimeException("not implemented");
+		return productDao.findById(name)
+			.map(product -> {
+				if(origin!=null)	product.setOrigin(origin);
+				if(price!=null)		product.setPrice(price);
+				if(currency!=null)	product.setCurrency(currency);
+				if(details!=null)	product.setDetails(details);
+				productDao.saveAndFlush(product);
+				return product;
+			})
+			.orElseThrow(()-> new NoSuchElementException(name + "do not exist in the inventory"));
 	}
 }

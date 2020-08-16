@@ -12,7 +12,7 @@ public interface AbstractInventoryCreator{
 	
 	Product create(String name, String category, String subcategory);
 	Product updateDetails(String name,
-		String origin, double price, String currency,
+		String origin, Double price, String currency,
 		ProductDetailsAbstract details
 	);
 }

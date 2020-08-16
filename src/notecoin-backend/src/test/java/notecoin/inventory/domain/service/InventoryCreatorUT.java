@@ -74,7 +74,7 @@ public class InventoryCreatorUT {
 
 	@Test
 	public void updateProductDetails() {
-		Product result = service.updateDetails(banana, "FRANCE", 10, "EUR", new ProductDetailsFruit("yellow", 10, 100, 0.8));
+		Product result = service.updateDetails(banana, "FRANCE", 10.0, "EUR", new ProductDetailsFruit("yellow", 10, 100, 0.8));
 		assertEquals(result, banana_product);
 		assertEquals(result.getOrigin(), "FRANCE");
 		assertEquals(result.getPrice(), 10.0);
@@ -106,6 +106,6 @@ public class InventoryCreatorUT {
 	
 	@Test
 	public void blockUpdateProductDetailsWithConflictWithCategory() {
-		assertThrows(IllegalArgumentException.class, ()-> service.updateDetails(banana, "FRANCE", 10, "EUR", new ProductDetailsGreens("green", 10, 100, 0.8)));
+		assertThrows(IllegalStateException.class, ()-> service.updateDetails(banana, "FRANCE", 10.0, "EUR", new ProductDetailsGreens("green", 10, 100, 0.8)));
 	}
 }

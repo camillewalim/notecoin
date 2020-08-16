@@ -48,13 +48,21 @@ public class Product {
 	@JsonIgnore
 	private ProductClass category;
 
-	private Date creation;		//when had this product being creating in inventory
-	private String origin;			//where is this kind of product produced
-	private double price;			//has this product a price
-	private String currency;		//price Unit
+	private Date creation;					//when had this product being creating in inventory
+	@Setter private String origin;			//where is this kind of product produced
+	@Setter private double price;			//has this product a price
+	@Setter private String currency;		//price Unit
 	
 	@Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
 	private ProductDetailsAbstract details;
+	
+	public void setDetails(ProductDetailsAbstract details) {
+		if(details.getClass() == ProductDetailsAbstract.class)
+			return;
+		if(! ProductClass.createPath(details.getClass()).equals(category))
+			throw new IllegalStateException("details & category mismatch : " + category + " vs " + details.getClass().getSimpleName());
+		this.details = details;
+	}
 	
 }
