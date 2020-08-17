@@ -16,9 +16,9 @@ public interface AbstractInventoryUpdater{
 	@Deprecated // Mk-I feature (inventory non-event based)
 	Instruction update(String name, int quantity);
 	
-	Instruction instruction(String name, Type type, int quantity, Date date, @Nullable Date until);
+	Instruction instruction(String name, OrderType type, int quantity, Date date, @Nullable Date until);
 	
-	public static enum Type{
+	public static enum OrderType{
 		GIVE, TAKE, LEND, BORROW
 	}
 }

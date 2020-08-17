@@ -37,7 +37,7 @@ public class Instruction {
 	}
 
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private int id;
+	private Integer id;
 
 	private int quantity;
 	

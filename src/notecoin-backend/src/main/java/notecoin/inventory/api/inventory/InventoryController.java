@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -53,7 +54,9 @@ public class InventoryController {
 	}
 
 	@PostMapping("/inventory/instruction")
-	String instruction(String product, AbstractInventoryUpdater.Type type, int quantity, Date when, Date until) {
+	String instruction(String product, AbstractInventoryUpdater.OrderType type, int quantity, 
+		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date when, 
+		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date until) {
 		return illegalArguments(()->{
 			updater.instruction(product, type, quantity, when, until);
 			return "ok";

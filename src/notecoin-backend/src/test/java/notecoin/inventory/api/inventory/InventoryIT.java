@@ -72,9 +72,10 @@ class InventoryIT {
 	}
 	
 	@Test
-	void post_instruction_give() throws Exception{ // by analogy this test also integration of take / borrow / lend 
-		web	.perform(MockMvcRequestBuilders.post("/inventory/instruction/give?product=banana&quantity=200"))
-	      .andExpect(status().isOk());
+	void post_instruction_4xx() throws Exception{ // by analogy this test also integration of take / borrow / lend 
+		web	.perform(MockMvcRequestBuilders.post("/inventory/instruction?product=banana&quantity=200&type=GIVE&when=2020-10-31"))
+	      .andExpect(status().isBadRequest());
+		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
 
 	@Test
