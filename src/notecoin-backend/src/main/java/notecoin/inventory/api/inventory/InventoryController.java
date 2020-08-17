@@ -1,6 +1,5 @@
 package notecoin.inventory.api.inventory;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,23 +42,26 @@ public class InventoryController {
 	
 
 	@PutMapping("/inventory/product/create")
-	String create(String product, String category, String subcategory) {
+	String create(@RequestParam String product, @RequestParam String category, String subcategory) {
 		return illegalArguments(()->{
 			creator.create(product, category, subcategory);
 			return "Created";
 		});
 	}
 	@PatchMapping("/inventory/product/details")
-	Product patch(String name, 
+	Product patch(@RequestParam String name, 
 		String origin, Double price, String currency,
 		ProductDetailsAbstract details) {
 		return illegalArguments(()-> creator.updateDetails(name, origin, price, currency, details));
 	}
 
 	@PostMapping("/inventory/instruction")
-	String instruction(String product, AbstractInventoryUpdater.OrderType type, int quantity, 
-		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date when, 
-		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date until) {
+	String instruction(
+		@RequestParam String product,
+		@RequestParam AbstractInventoryUpdater.OrderType type, 
+		@RequestParam int quantity, 
+		@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date when, 
+		@RequestParam(required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date until) {
 		return illegalArguments(()->{
 			updater.instruction(product, type, quantity, when, until);
 			return "ok";
@@ -66,7 +69,10 @@ public class InventoryController {
 	}
 	
 	@GetMapping("/inventory/position")
-	Map<String, Map<Date, Integer>> browse(PositionType type, String product, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date date) {
+	Map<String, Map<Date, Integer>> browse(
+		@RequestParam PositionType type, 
+		String product,
+		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date date) {
 		return illegalArguments(()-> browser.getPositions(type, product, date));
 	}
 	
