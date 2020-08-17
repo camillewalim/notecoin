@@ -1,7 +1,9 @@
 package notecoin.inventory;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 
 /**
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Boot Spring Application
  */
 @SpringBootApplication
+@EnableWebFlux
 public class Application {
 
     public static void main(String[] args) {

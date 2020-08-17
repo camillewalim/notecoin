@@ -1,7 +1,6 @@
 package notecoin.inventory;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import javax.sql.DataSource;
 
@@ -10,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
@@ -26,20 +24,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 class ApplicationIT {
 	
-	@LocalServerPort
-	private int port;
-	
 	@Autowired
-	private TestRestTemplate web;
+	WebTestClient web;
 	
 	@Test
 	void swagger_is_here() throws Exception{
-		assertTrue(web.getForEntity("http://localhost:"+port+"/swagger-ui.html#/", String.class).getStatusCode().is2xxSuccessful());
+		web.get().uri("public/swagger-ui.html#/").exchange().expectStatus().is3xxRedirection();
 	}
 
 	@Test
 	void h2_console_is_here() throws Exception{
-		assertTrue(web.getForEntity("http://localhost:"+port+"/h2/login.do", String.class).getStatusCode().is2xxSuccessful());
+		web.get().uri("http://localhost:8082/login.do").exchange().expectStatus().is2xxSuccessful();
 	}
 	
 	@Autowired
