@@ -23,6 +23,7 @@ import notecoin.inventory.domain.model.Instruction.Type;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser.PositionType;
+import notecoin.inventory.domain.service.AbstractInventoryUpdater.PositionMemory;
 import notecoin.inventory.infra.data.InstructionRepository;
 import notecoin.inventory.infra.data.ProductRepository;
 
@@ -39,7 +40,7 @@ public class InventoryBrowserUT {
 	InstructionRepository instructionDao= mock(InstructionRepository.class);
 	ProductRepository productDao= mock(ProductRepository.class);
 	
-	InventoryUpdater updater = new InventoryUpdater(instructionDao, productDao, new HashMap<>());  
+	InventoryUpdater updater = new InventoryUpdater(instructionDao, productDao, new PositionMemory());  
 	InventoryBrowser service = new InventoryBrowser(instructionDao, updater);
 	
 	
@@ -76,18 +77,20 @@ public class InventoryBrowserUT {
 	@Test
 	public void getPositionInStock() {
 		HashMap<Date, Integer> positionsByDate = new HashMap<>();
-		positionsByDate.put(today, 			4);
-		positionsByDate.put(tomorrow, 		10);
-		positionsByDate.put(aftertomorrow, 	7);
-		positionsByDate.put(later, 			4);
+		positionsByDate.put(new Date(0), 	0);
+		positionsByDate.put(today, 			400);
+		positionsByDate.put(tomorrow, 		1000);
+		positionsByDate.put(aftertomorrow, 	200);
+		positionsByDate.put(later, 			400);
 		assertEquals(service.getPositions(PositionType.InStock, banana, null).get(banana), positionsByDate);
 	}
 	
 	@Test
 	public void getPositionInLnB() {
 		HashMap<Date, Integer> positionsByDate = new HashMap<>();
+		positionsByDate.put(new Date(0), 	0);
 		positionsByDate.put(today, 			0);
-		positionsByDate.put(tomorrow, 		1);
+		positionsByDate.put(tomorrow, 		100);
 		positionsByDate.put(aftertomorrow, 	0);
 		positionsByDate.put(later, 			0);
 		assertEquals(service.getPositions(PositionType.LnB, banana, null).get(banana), positionsByDate);

@@ -2,7 +2,6 @@ package notecoin.inventory.domain.service;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -31,7 +30,7 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 	private JpaRepository<Product, String> productDao;
 	
 	//		Product,	per Delivery Date, position: {given, receivables}
-	private Map<String, TreeMap<Date, Pair<AtomicInteger,AtomicInteger>>> positions; 
+	private PositionMemory positionMemory; 
 	
 	@Override
 	@Deprecated // Mk-I feature (inventory non-event based)
@@ -76,46 +75,46 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 		boolean isLongDelta = type==Type.given || type==Type.receivable;
 		boolean isLendAnBorrow = type==Type.payable || type==Type.receivable;
 		Date maturity = isLendAnBorrow ? i.getMaturity() : null;
-		
-		// Find the product
-		TreeMap<Date, Pair<AtomicInteger,AtomicInteger>> positionsByDate = 
-			Optional.ofNullable(positions.get(name))
-					.orElseGet(()->productDao	
-						.findById(name)
-						.map(p -> {
-							TreeMap<Date, Pair<AtomicInteger,AtomicInteger>> map= new TreeMap<>(); 
-							map.put(new Date(0L), Pair.of(new AtomicInteger(), new AtomicInteger()));
-							positions.put(name, map);
-							return map;
-						})
-						.orElseThrow(() -> new IllegalArgumentException("This product do not exist in inventory"))
-					);
-		
-		// Find the date-range
-		 Stream	
-			.of(Optional.of(date), Optional.ofNullable(maturity))
-			.filter(Optional::isPresent).map(Optional::get)
-			.forEach(d ->Optional 
-				.ofNullable(positionsByDate.floorEntry(d).getValue())
-				.ifPresent(pair ->positionsByDate.put(d, Pair.of(
-					new AtomicInteger(pair.getFirst().intValue()), 
-					new AtomicInteger(pair.getSecond().intValue())))
-				));
-		Iterator<Entry<Date, Pair<AtomicInteger,AtomicInteger>>> dates = positionsByDate.tailMap(date).entrySet().iterator();
-		
-		// Iterating through date ranges and updating points
-		Consumer<Entry<Date, Pair<AtomicInteger,AtomicInteger>>> update = next -> updatePosition(isLongDelta, isLendAnBorrow, next.getValue(), quantity);
-		if(maturity==null)			// update until the end
-			while(dates.hasNext())
-				update.accept(dates.next());
-		else						// update until the maturity
-			while(dates.hasNext()) {	
-				Entry<Date, Pair<AtomicInteger,AtomicInteger>> next = dates.next();
-				if(next.getKey().getTime() < maturity.getTime())
-					update.accept(next);
-				else break;
-			}
-
+		positionMemory.write(positions -> {
+			// Find the product
+			TreeMap<Date, Pair<AtomicInteger,AtomicInteger>> positionsByDate = 
+				Optional.ofNullable(positions.get(name))
+						.orElseGet(()->productDao	
+							.findById(name)
+							.map(p -> {
+								TreeMap<Date, Pair<AtomicInteger,AtomicInteger>> map= new TreeMap<>(); 
+								map.put(new Date(0L), Pair.of(new AtomicInteger(), new AtomicInteger()));
+								positions.put(name, map);
+								return map;
+							})
+							.orElseThrow(() -> new IllegalArgumentException("This product do not exist in inventory"))
+						);
+			
+			// Find the date-range
+			 Stream	
+				.of(Optional.of(date), Optional.ofNullable(maturity))
+				.filter(Optional::isPresent).map(Optional::get)
+				.forEach(d ->Optional 
+					.ofNullable(positionsByDate.floorEntry(d).getValue())
+					.ifPresent(pair ->positionsByDate.put(d, Pair.of(
+						new AtomicInteger(pair.getFirst().intValue()), 
+						new AtomicInteger(pair.getSecond().intValue())))
+					));
+			Iterator<Entry<Date, Pair<AtomicInteger,AtomicInteger>>> dates = positionsByDate.tailMap(date).entrySet().iterator();
+			
+			// Iterating through date ranges and updating points
+			Consumer<Entry<Date, Pair<AtomicInteger,AtomicInteger>>> update = next -> updatePosition(isLongDelta, isLendAnBorrow, next.getValue(), quantity);
+			if(maturity==null)			// update until the end
+				while(dates.hasNext())
+					update.accept(dates.next());
+			else						// update until the maturity
+				while(dates.hasNext()) {	
+					Entry<Date, Pair<AtomicInteger,AtomicInteger>> next = dates.next();
+					if(next.getKey().getTime() < maturity.getTime())
+						update.accept(next);
+					else break;
+				}
+		});
 	}
 	
 	private static Pair<AtomicInteger,AtomicInteger> updatePosition(
@@ -138,7 +137,8 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 		return positions;
 	}
 	
-	public Map<String, TreeMap<Date, Pair<AtomicInteger,AtomicInteger>>> getPositionCopiedMap(){
-		throw new RuntimeException("not implementd");
+	public PositionMemory getPositionCopiedMap(){
+		return positionMemory;
 	}
+	
 }

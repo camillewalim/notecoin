@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater.OrderType;
+import notecoin.inventory.domain.service.AbstractInventoryUpdater.PositionMemory;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.infra.data.InstructionRepository;
 import notecoin.inventory.infra.data.ProductRepository;
@@ -34,7 +34,7 @@ public class InventoryUpdaterUT {
 	
 	InstructionRepository quantityDao= mock(InstructionRepository.class);
 	ProductRepository productDao= mock(ProductRepository.class);
-	InventoryUpdater service = new InventoryUpdater(quantityDao, productDao, new HashMap<>());
+	InventoryUpdater service = new InventoryUpdater(quantityDao, productDao, new PositionMemory());
 	
 	Product banana_name = new Product(banana, new ProductClass());
 	Instruction banana_quantity = new Instruction(100, banana_name, Instruction.Type.given, new Date(), null);

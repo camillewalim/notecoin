@@ -1,9 +1,13 @@
 package notecoin.inventory.domain.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.lang.Nullable;
 
@@ -38,7 +42,16 @@ public class InventoryBrowser implements AbstractInventoryBrowser{
 
 	@Override
 	public Map<String,  Map<Date, Integer>> getPositions(PositionType type, @Nullable String name, @Nullable Date date){ 
-		throw new RuntimeException("not implemented");
+		return updater.getPositionCopiedMap().reader(positions ->
+			Optional.ofNullable(name)
+					.map(n -> Collections.singletonMap(n, positions.get(name)))
+					.orElse(positions)
+					.entrySet().stream().collect(Collectors.toMap(Entry::getKey, positionsByDate -> 
+						Optional.ofNullable(date)
+								.map(d -> Collections.singletonMap(d, positionsByDate.getValue().get(date)))
+								.orElse(positionsByDate.getValue())
+								.entrySet().stream().collect(Collectors.toMap(Entry::getKey, position ->
+									type == PositionType.InStock ? position.getValue().getFirst().intValue() : position.getValue().getSecond().intValue() )))) );
 	}
 	
 }

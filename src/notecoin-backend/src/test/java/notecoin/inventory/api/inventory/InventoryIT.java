@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import notecoin.inventory.domain.model.product.ProductClass;
 import notecoin.inventory.domain.model.product.Product;
+import notecoin.inventory.domain.service.AbstractInventoryUpdater.PositionMemory;
 import notecoin.inventory.domain.service.InventoryBrowser;
 import notecoin.inventory.domain.service.InventoryCreator;
 import notecoin.inventory.domain.service.InventoryUpdater;
@@ -42,6 +43,7 @@ class InventoryIT {
 	@MockBean	JpaRepository<Product, String> productDao;
 	@MockBean	JpaRepository<ProductClass, String> productClassDao;
 	@MockBean	InstructionRepository instructionDao;
+	@MockBean	PositionMemory positionMemory;
 	
 	
 
@@ -72,9 +74,9 @@ class InventoryIT {
 	}
 	
 	@Test
-	void post_instruction_4xx() throws Exception{ // by analogy this test also integration of take / borrow / lend 
+	void post_instruction_200() throws Exception{ // by analogy this test also integration of take / borrow / lend 
 		web	.perform(MockMvcRequestBuilders.post("/inventory/instruction?product=banana&quantity=200&type=GIVE&when=2020-10-31"))
-	      .andExpect(status().isBadRequest());
+	      .andExpect(status().isOk());
 		// Could not test in a transient environment -> a bit long to code to emulate this transactionality
 	}
 
