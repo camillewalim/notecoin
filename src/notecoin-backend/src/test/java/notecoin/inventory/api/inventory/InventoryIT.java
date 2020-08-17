@@ -80,12 +80,24 @@ class InventoryIT {
 
 	@Test
 	void browse_all_200() throws Exception {
-		web	.perform(MockMvcRequestBuilders.get("/inventory/browse"))
+		web	.perform(MockMvcRequestBuilders.get("/inventory/instructions"))
 		      .andExpect(status().isOk());
 		// Service activation
 			verify(browser,times(1)).getAll();
 		// Service query CRUD one time
 			verify(instructionDao,times(1)).findAll();
+	}
+
+
+	@Test
+	void position_all_200() throws Exception {
+		web	.perform(MockMvcRequestBuilders.get("/inventory/position?type=InStock&product=banana&when=2020-10-31"))
+		      .andExpect(status().isOk());
+		// Service activation
+			verify(browser,times(1)).getPositions(any(),any(),any());
+		// Stay in the API rather than locking the DB
+			verify(updater,times(1)).getPositionCopiedMap();
+//			verify(instructionDao,times(1)).findAll();
 	}
 	
 

@@ -3,6 +3,7 @@ package notecoin.inventory.api.inventory;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
@@ -20,6 +21,7 @@ import notecoin.inventory.domain.model.Instruction;
 import notecoin.inventory.domain.model.product.Product;
 import notecoin.inventory.domain.model.product.ProductDetailsAbstract;
 import notecoin.inventory.domain.service.AbstractInventoryBrowser;
+import notecoin.inventory.domain.service.AbstractInventoryBrowser.PositionType;
 import notecoin.inventory.domain.service.AbstractInventoryCreator;
 import notecoin.inventory.domain.service.AbstractInventoryUpdater;
 
@@ -63,6 +65,17 @@ public class InventoryController {
 		});
 	}
 	
+	@GetMapping("/inventory/position")
+	Map<String, Map<Date, Integer>> browse(PositionType type, String product, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  Date date) {
+		return illegalArguments(()-> browser.getPositions(type, product, date));
+	}
+	
+	@GetMapping("/inventory/instructions")
+	List<Instruction> browse() {
+		return illegalArguments(()-> browser.getAll() );
+	}
+	
+	
 	@PostMapping("/inventory/update")
 	@Deprecated // Mk-I feature (inventory non-event based)
 	String update(String product, int quantity) {
@@ -71,12 +84,7 @@ public class InventoryController {
 			return "Updated";
 		});
 	}
-	
 
-	@GetMapping("/inventory/browse")
-	List<Instruction> browse(String product) {
-		return illegalArguments(()-> product==null ? browser.getAll() : Collections.singletonList(browser.get(product)));
-	}
 	
 	public <T> T illegalArguments(Supplier<T> supplier) {
 		try {

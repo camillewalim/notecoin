@@ -53,8 +53,8 @@ public class InventoryConfig {
 	
 
 	@Bean
-	public AbstractInventoryBrowser browser(JpaRepository<Instruction, Integer> instructionDao) {
-		return new InventoryBrowser((InstructionRepository) instructionDao);
+	public AbstractInventoryBrowser browser(JpaRepository<Instruction, Integer> instructionDao, AbstractInventoryUpdater updater) {
+		return new InventoryBrowser((InstructionRepository) instructionDao, updater);
 	}
 	
 	@Autowired AbstractInventoryUpdater updater;

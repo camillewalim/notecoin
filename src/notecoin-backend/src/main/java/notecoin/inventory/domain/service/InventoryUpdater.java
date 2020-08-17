@@ -137,5 +137,8 @@ public class InventoryUpdater implements AbstractInventoryUpdater{
 		);
 		return positions;
 	}
-
+	
+	public Map<String, TreeMap<Date, Pair<AtomicInteger,AtomicInteger>>> getPositionCopiedMap(){
+		throw new RuntimeException("not implementd");
+	}
 }
